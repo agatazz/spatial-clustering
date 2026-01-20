@@ -70,10 +70,6 @@ python main.py
 
 ```
 
-## Visualization
-
-The repository includes a custom visualization function `visualize_graph_connectivity` which displays the "spider-web" of connections used by the Spectral algorithm, overlaid with the final cluster assignments.
-
 ---
 
 ### Future Exploration
