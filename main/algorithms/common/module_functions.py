@@ -14,6 +14,7 @@ import pandas as pd
 import numpy as np
 import plotly.express as px
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 
 def visualize_3d(data, cluster_column='cluster'):
@@ -131,3 +132,51 @@ def plot_elbow_method(data, scaled_features):
     plt.ylabel('Inertia')
     plt.title('The Elbow Method for Optimal k')
     plt.show()
+
+def get_data(csv_path):
+    data = pd.read_csv(csv_path)
+    R = 63710
+
+    lat_rad = np.radians(data['latitude'])
+    lon_rad = np.radians(data['longitude'])
+    r = R - data['depth']
+
+    data['x'] = r * np.cos(lat_rad) * np.cos(lon_rad)
+    data['y'] = r * np.cos(lat_rad) * np.sin(lon_rad)
+    data['z'] = r * np.sin(lat_rad)
+    X = data[['x','y','z']].values
+    return data, X
+
+def center_point_stats_summary(data):
+    # Calculate the center point for each cluster
+    cluster_stats = data.groupby('spectral_cluster').agg({
+        'x': 'mean',
+        'y': 'mean',
+        'z': 'mean',
+        'mag': ['mean', 'count']
+    }).reset_index()
+
+    # Flatten columns for readability
+    cluster_stats.columns = ['Cluster', 'Avg_X', 'Avg_Y', 'Avg_Z', 'Avg_Mag', 'Count']
+
+    print("--- Cluster Geographic Centers ---")
+    print(cluster_stats)
+
+    c1 = cluster_stats.loc[cluster_stats['Cluster'] == 1, ['Avg_X', 'Avg_Y', 'Avg_Z']].values
+    c3 = cluster_stats.loc[cluster_stats['Cluster'] == 3, ['Avg_X', 'Avg_Y', 'Avg_Z']].values
+    dist = np.linalg.norm(c1 - c3)
+
+    print(f"\nDistance between Cluster 1 and Cluster 3 centers: {dist:.2f}")
+    return cluster_stats
+
+def box_plot_by_cluster(data, cluster_column, feature_column):
+    plt.figure(figsize=(10,6))
+    sns.boxplot(x= cluster_column, y = feature_column, data = data, palette = 'viridis')
+    plt.title('Magnitude Consistency per Cluster')
+    plt.xlabel('Cluster ID')
+    plt.ylabel('Earthquake Magnitude')
+    plt.show()
+
+    stats = data.groupby(cluster_column)[feature_column].agg(['mean', 'std', 'count'])
+    stats['coefficient_of_variation'] = stats['std'] / stats['mean']
+    print(stats)

@@ -53,6 +53,13 @@ Since these algorithms utilize different mathematical foundations, a variety of 
 * **3D Visualization:** Geographic plotting of clusters and their centroids to confirm spatial logic.
 * **Box Plots:** To visualize the spread and outliers of magnitude within each cluster.
 
+## Conclusions
+The multi-model analysis of the spatial-magnitude data reveals a highly robust and consistent structure. The primary findings are:
+Validation of the Core Hotspot: Every algorithm tested (Spectral, HDBSCAN, and Agglomerative) successfully isolated a specific group of 13 high-magnitude events (Avg. Mag $\approx 4.68$). The fact that these points remained clustered despite different mathematical approaches (Graph-based, Density-based, and Hierarchical) confirms they are a statistically significant physical anomaly.
+Noise and Refinement: Through HDBSCAN, approximately 64 points were identified as spatial noise. Removing these outliers "sharpened" the clusters, reducing the Coefficient of Variation and providing a clearer picture of the stable background regions. 
+Model Performance Summary: Spectral Clustering provided the best balance, treating geography as a constraint while allowing magnitude similarity to guide the boundaries.
+HDBSCAN acted as the "truth-checker," filtering noise and verifying the density of the core hotspot. Agglomerative Clustering revealed the internal hierarchical breaks within the geographic regions.
+
 ## Installation & Usage
 
 1. Clone the repo:
