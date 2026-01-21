@@ -6,9 +6,9 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.metrics import f1_score
 from sklearn.model_selection import StratifiedKFold
 from mpl_toolkits.mplot3d import Axes3D
+from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 import geopandas as gpd
-import matplotlib.pyplot as plt
 import networkx as nx
 import pandas as pd
 import numpy as np
@@ -103,4 +103,31 @@ def visualize_clusters_on_known_fault_lines(data, crs, cluster_column):
     plt.title("Earthquake Clusters vs. Known Fault Lines")
     plt.xlabel("Longitude")
     plt.ylabel("Latitude")
+    plt.show()
+
+def plot_elbow_method(data, scaled_features):
+    inertia = []
+    K = range(1, 11)
+    # Loop to calculate Inertia and plot each version of k
+    for k in K:
+        kmeans = KMeans(n_clusters=k, random_state=42, n_init=10)
+        # Use the scaled_features we created earlier
+        new_labels = kmeans.fit_predict(scaled_features) 
+        inertia.append(kmeans.inertia_)
+        
+        # Plotting the NEW labels for this specific 'k'
+        plt.figure(figsize=(6, 4))
+        plt.scatter(data['longitude'], data['latitude'], c=new_labels, cmap='viridis', s=10)
+        plt.colorbar(label='Cluster ID')
+        plt.xlabel('Longitude')
+        plt.ylabel('Latitude')
+        plt.title(f'K-Means Clustering with k={k}')
+        plt.show()
+
+    # After the loop, plot the Elbow Curve to see which 'k' is best
+    plt.figure(figsize=(8, 5))
+    plt.plot(K, inertia, 'bx-')
+    plt.xlabel('Number of Clusters (k)')
+    plt.ylabel('Inertia')
+    plt.title('The Elbow Method for Optimal k')
     plt.show()
