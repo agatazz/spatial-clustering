@@ -28,27 +28,7 @@ The project uses earthquake records ([USGS Earthquake Catalog](https://earthquak
 * **Location**: Latitude, Longitude, and Depth (Hypocenter).
 * **Attributes**: Magnitude, RMS travel time, and horizontal error.
 
-## Methodology
 
-### 1. Spatially Constrained K-Means
-
-Standard K-Means is modified by scaling the spatial features  by a factor .
-
-* High: Forces geographically compact "blobs."
-* Low: Prioritizes attribute similarity (e.g., grouping all high-magnitude quakes together).
-
-### 2. Spectral Clustering on Spatial Graphs
-
-Unlike K-Means, Spectral Clustering views the data as a graph:
-
-1. A **kNN Graph** is built where edges only exist between geographic neighbors.
-2. The edges are weighted by magnitude similarity.
-3. The **Graph Laplacian** is used to find "Min-Cuts," effectively identifying where seismic activity is physically decoupled.
-
-## Results & Evaluation
-
-* **Silhouette Analysis**: KMeans model achieved a Silhouette Score of **~0.72** with , indicating strong cluster separation.
-* **Geological Validation**: Clusters were overlaid on known fault lines to verify that the mathematical groupings align with real-world tectonic structures.
 
 ## Installation & Usage
 
@@ -72,8 +52,5 @@ python main.py
 
 ---
 
-### Future Exploration
 
-* [ ] Implement **HDBSCAN** to separate seismic noise from active fault clusters.
-* [ ] Test **SKATER** (Spatial 'K'luster Analysis by Tree Edge Removal) for strict contiguity.
 
